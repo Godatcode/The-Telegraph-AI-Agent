@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. Set up project structure and dependencies
+- [x] 1. Set up project structure and dependencies
   - Create client (React + Vite) and server (Node.js + Express) directories
   - Initialize package.json files with required dependencies
   - Configure Vite for React with fast refresh
@@ -8,7 +8,7 @@
   - Install Vitest and fast-check for testing
   - _Requirements: All_
 
-- [ ] 2. Implement Morse Engine translation library
+- [x] 2. Implement Morse Engine translation library
   - Create shared/morse-lib.js with ITU character mappings
   - Implement textToMorse() function for text-to-Morse conversion
   - Implement morseToText() function for Morse-to-text conversion
@@ -16,25 +16,25 @@
   - Add error handling for invalid characters and sequences
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 2.1 Write property test for Morse round-trip
+- [x] 2.1 Write property test for Morse round-trip
   - **Property 1: Morse Engine Round-Trip Preservation**
   - **Validates: Requirements 4.1, 4.2**
 
-- [ ] 2.2 Write property test for ITU character coverage
+- [x] 2.2 Write property test for ITU character coverage
   - **Property 9: ITU Character Coverage**
   - **Validates: Requirements 4.4**
 
-- [ ] 2.3 Write property test for invalid sequence handling
+- [x] 2.3 Write property test for invalid sequence handling
   - **Property 7: Invalid Sequence Handling**
   - **Validates: Requirements 4.3**
 
-- [ ] 2.4 Write unit tests for Morse Engine
+- [x] 2.4 Write unit tests for Morse Engine
   - Test specific examples: "HELLO", "SOS", "123"
   - Test edge cases: empty string, single character, punctuation
   - Test error cases: null, undefined, unsupported characters
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 3. Build Audio Engine with Web Audio API
+- [x] 3. Build Audio Engine with Web Audio API
   - Create client/src/AudioEngine.js class
   - Implement startTone() method with 600Hz oscillator
   - Implement stopTone() method to halt audio
@@ -43,15 +43,15 @@
   - Add error handling for unsupported browsers
   - _Requirements: 1.4, 1.5, 6.1, 6.2, 6.3, 6.4_
 
-- [ ] 3.1 Write property test for audio state synchronization
+- [x] 3.1 Write property test for audio state synchronization
   - **Property 4: Audio State Synchronization**
   - **Validates: Requirements 1.4, 1.5**
 
-- [ ] 3.2 Write property test for timing array correctness
+- [x] 3.2 Write property test for timing array correctness
   - **Property 11: Morse Timing Array Correctness**
   - **Validates: Requirements 6.1, 6.2, 6.3, 6.4**
 
-- [ ] 3.3 Write unit tests for Audio Engine
+- [x] 3.3 Write unit tests for Audio Engine
   - Test oscillator creation and frequency
   - Test tone start/stop behavior
   - Test timing array playback sequence

@@ -1,0 +1,21 @@
+{
+  "name": "telegraph-ai-agent",
+  "version": "1.0.0",
+  "description": "A web-based application that resurrects 1844 Morse code protocol as a modern interface for communicating with AI",
+  "type": "module",
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "build:client": "cd client && npm run build",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install"
+  },
+  "keywords": ["morse", "telegraph", "ai", "mcp"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^1.0.4",
+    "fast-check": "^3.15.0"
+  }
+}
