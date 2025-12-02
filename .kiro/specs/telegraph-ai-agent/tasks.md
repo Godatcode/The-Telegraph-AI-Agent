@@ -57,7 +57,7 @@
   - Test timing array playback sequence
   - _Requirements: 1.4, 1.5, 6.2, 6.3, 6.4_
 
-- [ ] 4. Create Telegraph Key input component
+- [x] 4. Create Telegraph Key input component
   - Create client/src/TelegraphKey.jsx component
   - Implement mouse down/up event handlers
   - Add timing logic to distinguish dots (< 200ms) from dashes (>= 200ms)
@@ -66,21 +66,21 @@
   - Add visual feedback for key press state
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [ ] 4.1 Write property test for timing threshold accuracy
+- [x] 4.1 Write property test for timing threshold accuracy
   - **Property 2: Timing Threshold Accuracy**
   - **Validates: Requirements 1.1, 1.2**
 
-- [ ] 4.2 Write property test for character break detection
+- [x] 4.2 Write property test for character break detection
   - **Property 3: Character Break Detection**
   - **Validates: Requirements 1.3**
 
-- [ ] 4.3 Write unit tests for Telegraph Key
+- [x] 4.3 Write unit tests for Telegraph Key
   - Test specific press durations: 100ms, 199ms, 200ms, 300ms
   - Test character break timing
   - Test audio integration
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 5. Build Display Manager for UI rendering
+- [x] 5. Build Display Manager for UI rendering
   - Create client/src/DisplayManager.jsx component
   - Implement real-time Morse sequence display
   - Add character decoding display on character breaks
@@ -88,19 +88,19 @@
   - Display AI response playback status
   - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-- [ ] 5.1 Write property test for input display immediacy
+- [x] 5.1 Write property test for input display immediacy
   - **Property 5: Input Display Immediacy**
   - **Validates: Requirements 2.1**
 
-- [ ] 5.2 Write property test for valid Morse decoding
+- [x] 5.2 Write property test for valid Morse decoding
   - **Property 6: Valid Morse Decoding**
   - **Validates: Requirements 2.2**
 
-- [ ] 5.3 Write property test for transmission buffer reset
+- [x] 5.3 Write property test for transmission buffer reset
   - **Property 8: Transmission Buffer Reset**
   - **Validates: Requirements 2.4**
 
-- [ ] 5.4 Write unit tests for Display Manager
+- [x] 5.4 Write unit tests for Display Manager
   - Test display updates for dots and dashes
   - Test character decoding display
   - Test error state indication
