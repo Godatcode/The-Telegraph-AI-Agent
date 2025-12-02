@@ -107,7 +107,7 @@
   - Test buffer clearing
   - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-- [ ] 6. Apply period-accurate styling
+- [x] 6. Apply period-accurate styling
   - Create client/src/styles/telegraph.css with sepia color scheme
   - Add typewriter font imports (Courier Prime or Special Elite)
   - Implement paper texture background
@@ -115,11 +115,11 @@
   - Apply consistent styling to all text elements
   - _Requirements: 3.1, 3.2, 3.3_
 
-- [ ] 6.1 Write property test for typewriter font application
+- [x] 6.1 Write property test for typewriter font application
   - **Property 18: Typewriter Font Application**
   - **Validates: Requirements 3.2**
 
-- [ ] 7. Implement backend API server
+- [-] 7. Implement backend API server
   - Create server/index.js with Express setup
   - Implement POST /api/send-telegram endpoint
   - Add request validation for morse_sequence field
@@ -128,7 +128,7 @@
   - Implement rate limiting (10 requests per minute)
   - _Requirements: 5.1, 5.2, 5.5_
 
-- [ ] 7.1 Write property test for backend response completeness
+- [-] 7.1 Write property test for backend response completeness
   - **Property 10: Backend Response Completeness**
   - **Validates: Requirements 5.5**
 
