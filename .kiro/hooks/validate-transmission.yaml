@@ -1,0 +1,13 @@
+name: Telegraph Code Validator
+description: Ensures period-accurate code by detecting modern terminology
+trigger:
+  type: file_save
+  pattern: "client/**/*.{js,jsx,ts,tsx}"
+action:
+  type: command
+  command: |
+    if grep -l "console\\.log\\|alert\\|debugger" {{filepath}}; then
+      echo "⚠️  WARNING: Modern slang detected on the telegraph line."
+      echo "   Telegraph operators of 1865 would not understand these terms."
+      echo "   Consider removing: console.log, alert, debugger"
+    fi

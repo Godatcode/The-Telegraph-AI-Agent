@@ -204,7 +204,7 @@
   - Test error handling when AI unavailable
   - _Requirements: 5.3, 5.4, 5.5, 7.1, 7.2, 7.3_
 
-- [ ] 12. Implement response playback in frontend
+- [x] 12. Implement response playback in frontend
   - Add response handling in main App component
   - Integrate Audio Engine for Morse playback
   - Implement playback controls (play, pause, cancel)
@@ -212,17 +212,17 @@
   - Add visual indicators for playback progress
   - _Requirements: 6.1, 6.5_
 
-- [ ] 12.1 Write property test for playback completion display
+- [x] 12.1 Write property test for playback completion display
   - **Property 12: Playback Completion Display**
   - **Validates: Requirements 6.5**
 
-- [ ] 12.2 Write unit tests for response playback
+- [x] 12.2 Write unit tests for response playback
   - Test timing array playback
   - Test text display after completion
   - Test playback interruption handling
   - _Requirements: 6.1, 6.5_
 
-- [ ] 13. Create validation hook for period-accurate code
+- [x] 13. Create validation hook for period-accurate code
   - Create .kiro/hooks/validate-transmission.yaml
   - Configure file_save trigger for client JavaScript files
   - Implement grep command to detect console.log, alert, debugger
@@ -230,7 +230,7 @@
   - Test hook execution on file save
   - _Requirements: 9.1, 9.2, 9.3, 9.4_
 
-- [ ] 14. Wire up complete user flow
+- [-] 14. Wire up complete user flow
   - Connect Telegraph Key to Display Manager
   - Connect Display Manager to backend API
   - Connect backend response to Audio Engine playback
@@ -239,7 +239,7 @@
   - Handle all error states with period-appropriate messages
   - _Requirements: All_
 
-- [ ] 14.1 Write end-to-end integration tests
+- [x] 14.1 Write end-to-end integration tests
   - Test complete user flow: tap → send → receive → playback
   - Test error scenarios: network failure, invalid input
   - Test audio fallback mode
