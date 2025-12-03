@@ -565,22 +565,162 @@ p, span, div, button, input {
 }
 
 /* ============================================
-   SENDING INDICATOR
+   LOADING INDICATOR
    ============================================ */
 
-.sending-indicator {
+.loading-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  margin-top: 1rem;
+  gap: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
   background-color: var(--sepia-paper);
-  border: 2px solid var(--sepia-medium);
+  border: 3px solid var(--brass-base);
   border-radius: 4px;
+  box-shadow: 0 4px 6px var(--sepia-shadow);
+}
+
+.loading-spinner {
+  font-size: 2rem;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.loading-text {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--sepia-ink);
   text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+}
+
+/* ============================================
+   ERROR BANNER
+   ============================================ */
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  background-color: rgba(139, 0, 0, 0.1);
+  border: 3px solid #8B0000;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px var(--sepia-shadow);
+}
+
+.error-text {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: #8B0000;
+  text-transform: uppercase;
   letter-spacing: 0.1em;
-  animation: pulse 1.5s ease-in-out infinite;
+  font-weight: 700;
+  flex: 1;
+}
+
+.error-dismiss {
+  background: none;
+  border: none;
+  color: #8B0000;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.error-dismiss:hover {
+  color: #A00000;
+  transform: scale(1.2);
+}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.app-footer {
+  text-align: center;
+  padding: 2rem 0;
+  margin-top: 2rem;
+  border-top: 3px double var(--sepia-dark);
+}
+
+.app-footer p {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--sepia-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* ============================================
+   DISABLED STATE
+   ============================================ */
+
+.telegraph-key.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(
+    135deg,
+    var(--sepia-medium) 0%,
+    var(--sepia-dark) 50%,
+    var(--sepia-ink) 100%
+  );
+}
+
+.telegraph-key.disabled:hover {
+  transform: none;
+  box-shadow: 
+    0 8px 16px var(--sepia-shadow),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   PLAYBACK STATUS (Updated)
+   ============================================ */
+
+.playback-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  background-color: var(--sepia-light);
+  border: 3px solid var(--brass-base);
+  border-radius: 4px;
+  box-shadow: 0 4px 6px var(--sepia-shadow);
+}
+
+.playback-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.playback-icon {
+  font-size: 2rem;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.playback-text {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--sepia-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 700;
 }

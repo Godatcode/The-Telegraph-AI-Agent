@@ -12,7 +12,7 @@ import { AudioEngine } from './AudioEngine.js';
  * - Press >= 200ms = dash (-)
  * - Pause > 800ms = character break
  */
-const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete }) => {
+const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete, disabled = false }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [currentSequence, setCurrentSequence] = useState('');
   
@@ -64,7 +64,7 @@ const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete }) =
   const handleMouseDown = (e) => {
     e.preventDefault();
     
-    if (isPressed) return;
+    if (isPressed || disabled) return;
 
     setIsPressed(true);
     pressStartTimeRef.current = Date.now();
@@ -136,16 +136,20 @@ const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete }) =
   return (
     <div className="telegraph-key-container">
       <button
-        className={`telegraph-key ${isPressed ? 'pressed' : ''}`}
+        className={`telegraph-key ${isPressed ? 'pressed' : ''} ${disabled ? 'disabled' : ''}`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
         onTouchStart={handleMouseDown}
         onTouchEnd={handleMouseUp}
+        disabled={disabled}
         aria-label="Telegraph Key"
+        aria-disabled={disabled}
       >
         <div className="key-label">TELEGRAPH KEY</div>
-        <div className="key-status">{isPressed ? 'PRESSED' : 'READY'}</div>
+        <div className="key-status">
+          {disabled ? 'BUSY' : isPressed ? 'PRESSED' : 'READY'}
+        </div>
       </button>
       
       <div className="morse-display">
@@ -153,10 +157,11 @@ const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete }) =
         <div className="sequence-value">{currentSequence || '—'}</div>
       </div>
 
-      {currentSequence.length > 0 && (
+      {currentSequence.length > 0 && !disabled && (
         <button 
           className="send-button"
           onClick={handleSendTransmission}
+          aria-label="Send transmission"
         >
           SEND TRANSMISSION
         </button>

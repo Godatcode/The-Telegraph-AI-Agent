@@ -230,7 +230,7 @@
   - Test hook execution on file save
   - _Requirements: 9.1, 9.2, 9.3, 9.4_
 
-- [-] 14. Wire up complete user flow
+- [x] 14. Wire up complete user flow
   - Connect Telegraph Key to Display Manager
   - Connect Display Manager to backend API
   - Connect backend response to Audio Engine playback
@@ -245,10 +245,10 @@
   - Test audio fallback mode
   - _Requirements: All_
 
-- [ ] 15. Checkpoint - Ensure all tests pass
+- [x] 15. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 16. Add documentation and examples
+- [x] 16. Add documentation and examples
   - Create README.md with project overview
   - Document Morse code reference chart
   - Add setup and installation instructions

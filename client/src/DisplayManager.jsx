@@ -18,10 +18,11 @@ const DisplayManager = ({
   onCharacterBreak,
   onTransmissionSent,
   isPlayingResponse = false,
-  responseText = ''
+  responseText = '',
+  responseMorse = '',
+  transmissionHistory = []
 }) => {
   const [decodedCharacter, setDecodedCharacter] = useState('');
-  const [transmissionHistory, setTransmissionHistory] = useState([]);
   const [errorState, setErrorState] = useState(false);
   const [inputBuffer, setInputBuffer] = useState('');
 
@@ -67,20 +68,9 @@ const DisplayManager = ({
 
   /**
    * Handles transmission send event
-   * Clears buffer and adds to history
+   * Clears buffer
    */
   const handleTransmissionSent = (morseSequence, decodedText) => {
-    // Add to history
-    const transmission = {
-      id: Date.now(),
-      morse: morseSequence,
-      text: decodedText,
-      timestamp: new Date().toISOString(),
-      sender: 'user'
-    };
-    
-    setTransmissionHistory(prev => [...prev, transmission]);
-    
     // Clear buffer immediately
     setInputBuffer('');
     setDecodedCharacter('');
@@ -88,23 +78,8 @@ const DisplayManager = ({
 
     // Notify parent
     if (onTransmissionSent) {
-      onTransmissionSent(transmission);
+      onTransmissionSent({ morse: morseSequence, text: decodedText });
     }
-  };
-
-  /**
-   * Adds AI response to history
-   */
-  const addResponseToHistory = (morseSequence, decodedText) => {
-    const transmission = {
-      id: Date.now(),
-      morse: morseSequence,
-      text: decodedText,
-      timestamp: new Date().toISOString(),
-      sender: 'operator'
-    };
-    
-    setTransmissionHistory(prev => [...prev, transmission]);
   };
 
   return (
