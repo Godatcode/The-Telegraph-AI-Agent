@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { morseToText, textToMorse, morseToTiming } from '../shared/morse-lib.js';
+import { invokeOperatorAI } from './operator-persona.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -27,7 +28,7 @@ app.get('/health', (req, res) => {
 });
 
 // POST /api/send-telegram - Process incoming Morse transmissions
-app.post('/api/send-telegram', (req, res) => {
+app.post('/api/send-telegram', async (req, res) => {
   try {
     // Validate request body
     if (!req.body) {
@@ -70,10 +71,20 @@ app.post('/api/send-telegram', (req, res) => {
       });
     }
 
-    // For now, generate a simple echo response
-    // (AI integration will be added in task 11)
-    const replyText = 'RECEIVED STOP';
+    // Invoke AI operator with decoded message
+    let replyText;
+    try {
+      replyText = await invokeOperatorAI(decodedText);
+    } catch (aiError) {
+      console.error('AI invocation failed:', aiError);
+      // Fallback response when AI is unavailable
+      replyText = 'OPERATOR UNAVAILABLE STOP TRY AGAIN STOP';
+    }
+
+    // Encode AI response to Morse
     const replyMorse = textToMorse(replyText);
+    
+    // Generate timing array for response playback
     const timingArray = morseToTiming(replyMorse);
 
     // Return complete response package
@@ -91,8 +102,11 @@ app.post('/api/send-telegram', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Telegraph server running on port ${PORT}`);
-});
+// Only start server if this file is run directly (not imported for testing)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  app.listen(PORT, () => {
+    console.log(`Telegraph server running on port ${PORT}`);
+  });
+}
 
 export default app;

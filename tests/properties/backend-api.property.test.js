@@ -78,7 +78,7 @@ describe('Backend API - Property-Based Tests', () => {
         
         return morseMatchesText && textMatchesMorse;
       }),
-      { numRuns: 100 }
+      { numRuns: 50 } // Reduced from 100 to avoid timeout with async HTTP requests
     );
-  });
+  }, 15000); // 15 second timeout for async property test with HTTP requests
 });

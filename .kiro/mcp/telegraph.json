@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "telegraph-line": {
+      "command": "node",
+      "args": ["server/mcp-telegraph-tool.js"],
+      "disabled": false,
+      "autoApprove": ["transmit_telegram"]
+    }
+  }
+}

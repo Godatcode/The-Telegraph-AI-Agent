@@ -119,7 +119,7 @@
   - **Property 18: Typewriter Font Application**
   - **Validates: Requirements 3.2**
 
-- [-] 7. Implement backend API server
+- [x] 7. Implement backend API server
   - Create server/index.js with Express setup
   - Implement POST /api/send-telegram endpoint
   - Add request validation for morse_sequence field
@@ -128,18 +128,18 @@
   - Implement rate limiting (10 requests per minute)
   - _Requirements: 5.1, 5.2, 5.5_
 
-- [-] 7.1 Write property test for backend response completeness
+- [x] 7.1 Write property test for backend response completeness
   - **Property 10: Backend Response Completeness**
   - **Validates: Requirements 5.5**
 
-- [ ] 7.2 Write unit tests for API endpoints
+- [x] 7.2 Write unit tests for API endpoints
   - Test valid transmission handling
   - Test invalid Morse sequence errors
   - Test rate limiting
   - Test error responses
   - _Requirements: 5.1, 5.2, 5.5_
 
-- [ ] 8. Create MCP Telegraph Line tool
+- [x] 8. Create MCP Telegraph Line tool
   - Create server/mcp-telegraph-tool.js
   - Implement transmit_telegram tool function
   - Accept text input and convert to Morse using Morse Engine
@@ -148,28 +148,28 @@
   - Add error handling for tool invocation failures
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
 
-- [ ] 8.1 Write property test for MCP tool text acceptance
+- [x] 8.1 Write property test for MCP tool text acceptance
   - **Property 16: MCP Tool Text Acceptance**
   - **Validates: Requirements 8.1**
 
-- [ ] 8.2 Write property test for MCP timing array format
+- [x] 8.2 Write property test for MCP timing array format
   - **Property 17: MCP Timing Array Format**
   - **Validates: Requirements 8.3, 8.4**
 
-- [ ] 8.3 Write unit tests for MCP tool
+- [x] 8.3 Write unit tests for MCP tool
   - Test tool invocation with various text inputs
   - Test response format validation
   - Test error handling
   - _Requirements: 8.1, 8.3, 8.4_
 
-- [ ] 9. Configure MCP integration
+- [x] 9. Configure MCP integration
   - Create .kiro/mcp/telegraph.json configuration file
   - Configure telegraph-line server with node command
   - Set autoApprove for transmit_telegram tool
   - Test MCP tool connectivity
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
 
-- [ ] 10. Implement AI operator persona with steering
+- [x] 10. Implement AI operator persona with steering
   - Create .kiro/steering/operator-persona.md
   - Define communication rules: uppercase only, word economy, STOP for periods
   - Add historical accuracy guidelines for anachronistic terms
@@ -177,19 +177,19 @@
   - Include character consistency instructions
   - _Requirements: 7.1, 7.2, 7.3, 10.1_
 
-- [ ] 10.1 Write property test for response uppercase enforcement
+- [x] 10.1 Write property test for response uppercase enforcement
   - **Property 13: Response Uppercase Enforcement**
   - **Validates: Requirements 7.1**
 
-- [ ] 10.2 Write property test for response brevity optimization
+- [x] 10.2 Write property test for response brevity optimization
   - **Property 14: Response Brevity Optimization**
   - **Validates: Requirements 7.2**
 
-- [ ] 10.3 Write property test for period replacement
+- [x] 10.3 Write property test for period replacement
   - **Property 15: Period Replacement**
   - **Validates: Requirements 7.3**
 
-- [ ] 11. Integrate AI response handling in backend
+- [x] 11. Integrate AI response handling in backend
   - Connect backend to MCP Telegraph Line tool
   - Implement AI invocation with decoded user message
   - Apply operator persona constraints to responses
@@ -198,7 +198,7 @@
   - Return complete response package to client
   - _Requirements: 5.3, 5.4, 5.5, 7.1, 7.2, 7.3_
 
-- [ ] 11.1 Write integration tests for AI flow
+- [x] 11.1 Write integration tests for AI flow
   - Test end-to-end: user Morse → AI → response Morse
   - Test persona application in responses
   - Test error handling when AI unavailable
