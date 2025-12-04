@@ -23,8 +23,10 @@ function App() {
    * Handle transmission completion from Telegraph Key
    * Sends Morse to backend and handles response playback
    */
-  const handleTransmissionComplete = async (morse) => {
-    if (!morse || morse.trim() === '') {
+  const handleTransmissionComplete = async () => {
+    const morse = currentMorseSequence.trim();
+    
+    if (!morse || morse === '') {
       setErrorMessage('NO TRANSMISSION TO SEND STOP');
       return;
     }
@@ -185,19 +187,46 @@ function App() {
    * Handle character break from Telegraph Key
    */
   const handleCharacterBreak = (sequence) => {
-    // Character break detected - decode for display
-    try {
-      const decoded = morseToText(sequence);
-      // Could show decoded character in real-time if needed
-    } catch (error) {
-      // Invalid sequence - will be handled by DisplayManager
-    }
+    // Character break detected - add space to separate letters
+    setCurrentMorseSequence(prev => {
+      // Only add space if previous character doesn't already end with space
+      if (prev.length > 0 && !prev.endsWith(' ') && !prev.endsWith('   ')) {
+        return prev + ' ';
+      }
+      return prev;
+    });
+  };
+
+  /**
+   * Handle word space from Telegraph Key (longer pause)
+   */
+  const handleWordSpace = () => {
+    // Word space detected - add three spaces (Morse convention for word separation)
+    setCurrentMorseSequence(prev => {
+      // Only add word space if we don't already have one
+      if (prev.length > 0 && !prev.endsWith('   ')) {
+        // Remove single space if present and add three spaces
+        const trimmed = prev.endsWith(' ') ? prev.slice(0, -1) : prev;
+        return trimmed + '   ';
+      }
+      return prev;
+    });
   };
 
   /**
    * Clear error message
    */
   const clearError = () => {
+    setErrorMessage('');
+  };
+
+  /**
+   * Handle clear button - reset all display state
+   */
+  const handleClear = () => {
+    setCurrentMorseSequence('');
+    setResponseText('');
+    setResponseMorse('');
     setErrorMessage('');
   };
 
@@ -235,7 +264,9 @@ function App() {
         <TelegraphKey 
           onDotDash={handleDotDash}
           onCharacterBreak={handleCharacterBreak}
+          onWordSpace={handleWordSpace}
           onTransmissionComplete={handleTransmissionComplete}
+          onClear={handleClear}
           disabled={isSending || isPlayingResponse}
         />
         

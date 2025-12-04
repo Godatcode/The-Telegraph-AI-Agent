@@ -105,7 +105,7 @@ const HelpHints = ({ show, sequenceLength, hasEverSent, onDismiss }) => {
  * - Press >= 200ms = dash (-)
  * - Pause > 800ms = character break
  */
-const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete, disabled = false }) => {
+const TelegraphKey = ({ onDotDash, onCharacterBreak, onWordSpace, onTransmissionComplete, onClear, disabled = false }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [currentSequence, setCurrentSequence] = useState('');
   const [transmissionStatus, setTransmissionStatus] = useState('idle'); // 'idle' | 'sending' | 'success' | 'error'
@@ -116,6 +116,7 @@ const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete, dis
   const lastInputTimeRef = useRef(null);
   const audioEngineRef = useRef(null);
   const breakTimerRef = useRef(null);
+  const wordSpaceTimerRef = useRef(null);
   const sequenceRef = useRef('');
 
   // Initialize AudioEngine and load user preferences on mount
@@ -145,33 +146,45 @@ const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete, dis
     };
   }, []);
 
-  // Monitor for character breaks
+  // Monitor for character breaks and word spaces
   useEffect(() => {
     if (lastInputTimeRef.current && currentSequence.length > 0) {
-      // Clear any existing timer
+      // Clear any existing timers
       if (breakTimerRef.current) {
         clearTimeout(breakTimerRef.current);
       }
+      if (wordSpaceTimerRef.current) {
+        clearTimeout(wordSpaceTimerRef.current);
+      }
 
-      // Set new timer for character break detection
+      // Set timer for character break detection (800ms)
       breakTimerRef.current = setTimeout(() => {
         if (sequenceRef.current.length > 0) {
           if (onCharacterBreak) {
             onCharacterBreak(sequenceRef.current);
           }
-          // Clear sequence - sync both state and ref
-          sequenceRef.current = '';
-          setCurrentSequence('');
+          // DO NOT clear sequence - keep it for sending
+          // User must click SEND or CLEAR explicitly
         }
       }, 800);
+      
+      // Set timer for word space detection (2000ms)
+      wordSpaceTimerRef.current = setTimeout(() => {
+        if (onWordSpace) {
+          onWordSpace();
+        }
+      }, 2000);
     }
 
     return () => {
       if (breakTimerRef.current) {
         clearTimeout(breakTimerRef.current);
       }
+      if (wordSpaceTimerRef.current) {
+        clearTimeout(wordSpaceTimerRef.current);
+      }
     };
-  }, [currentSequence, onCharacterBreak]);
+  }, [currentSequence, onCharacterBreak, onWordSpace]);
 
   const handleMouseDown = (e) => {
     e.preventDefault();
@@ -234,12 +247,18 @@ const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete, dis
   };
 
   const handleSendTransmission = async () => {
-    if (sequenceRef.current.length > 0) {
+    if (currentSequence.length > 0) {
       setTransmissionStatus('sending');
+      
+      // Trigger character break for any pending sequence before sending
+      if (sequenceRef.current.length > 0 && onCharacterBreak) {
+        onCharacterBreak(sequenceRef.current);
+      }
       
       try {
         if (onTransmissionComplete) {
-          await onTransmissionComplete(sequenceRef.current);
+          // Don't pass morse here - let parent use its own tracked sequence
+          await onTransmissionComplete();
         }
         
         // Only clear sequence on successful transmission - sync both state and ref
@@ -282,6 +301,11 @@ const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete, dis
     
     if (breakTimerRef.current) {
       clearTimeout(breakTimerRef.current);
+    }
+    
+    // Notify parent component to clear decoded text
+    if (onClear) {
+      onClear();
     }
   };
 
@@ -355,16 +379,14 @@ const TelegraphKey = ({ onDotDash, onCharacterBreak, onTransmissionComplete, dis
           SEND TRANSMISSION
         </button>
         
-        {currentSequence.length > 0 && (
-          <button 
-            className="clear-button"
-            onClick={handleClear}
-            disabled={disabled || transmissionStatus === 'sending'}
-            aria-label="Clear buffer"
-          >
-            CLEAR
-          </button>
-        )}
+        <button 
+          className="clear-button"
+          onClick={handleClear}
+          disabled={disabled || transmissionStatus === 'sending'}
+          aria-label="Clear buffer"
+        >
+          CLEAR
+        </button>
       </div>
     </div>
   );
