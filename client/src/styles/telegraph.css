@@ -245,11 +245,36 @@ p, span, div, button, input {
   min-height: 2rem;
 }
 
+.placeholder-text {
+  color: var(--sepia-medium);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.character-count {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--sepia-medium);
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
 /* ============================================
-   SEND BUTTON
+   ACTION BUTTONS
    ============================================ */
 
-.send-button {
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.send-button,
+.clear-button {
   padding: 1rem 2rem;
   font-family: var(--font-display);
   font-size: 1rem;
@@ -263,17 +288,185 @@ p, span, div, button, input {
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 6px var(--sepia-shadow);
+  min-width: 180px;
 }
 
-.send-button:hover {
+.send-button:hover:not(:disabled),
+.clear-button:hover:not(:disabled) {
   background-color: var(--sepia-ink);
   transform: translateY(-2px);
   box-shadow: 0 6px 8px var(--sepia-shadow);
 }
 
-.send-button:active {
+.send-button:active:not(:disabled),
+.clear-button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 4px var(--sepia-shadow);
+}
+
+.send-button:disabled,
+.clear-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--sepia-medium);
+  border-color: var(--sepia-medium);
+  color: var(--sepia-light);
+}
+
+.send-button:disabled:hover,
+.clear-button:disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 6px var(--sepia-shadow);
+}
+
+.clear-button {
+  background-color: #8B0000;
+  border-color: #5C0000;
+}
+
+.clear-button:hover:not(:disabled) {
+  background-color: #A00000;
+}
+
+/* ============================================
+   STATUS MESSAGES
+   ============================================ */
+
+.status-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  background-color: var(--sepia-paper);
+  border: 2px solid var(--sepia-medium);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px var(--sepia-shadow);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--sepia-ink);
+}
+
+.status-message.status-sending {
+  border-color: var(--brass-base);
+  background-color: rgba(184, 134, 11, 0.1);
+  color: var(--brass-shadow);
+}
+
+.status-message.status-success {
+  border-color: #2D5016;
+  background-color: rgba(45, 80, 22, 0.1);
+  color: #2D5016;
+}
+
+.status-message.status-error {
+  border-color: #8B0000;
+  background-color: rgba(139, 0, 0, 0.1);
+  color: #8B0000;
+}
+
+.loading-indicator,
+.success-indicator,
+.error-indicator {
+  font-size: 1.5rem;
+  display: inline-block;
+}
+
+.loading-indicator {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.success-indicator {
+  animation: successPop 0.3s ease-out;
+}
+
+.error-indicator {
+  animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes successPop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* ============================================
+   HELP HINTS
+   ============================================ */
+
+.help-hints {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  margin: 0.5rem 0;
+  background-color: rgba(184, 134, 11, 0.15);
+  border: 3px dashed var(--brass-base);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px var(--sepia-shadow);
+  width: 100%;
+  max-width: 500px;
+}
+
+.hint-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.hint-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--brass-shadow);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.hint-text {
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  color: var(--sepia-dark);
+  letter-spacing: 0.05em;
+}
+
+.dismiss-hint-button {
+  padding: 0.5rem 1rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--sepia-light);
+  background-color: var(--brass-shadow);
+  border: 2px solid var(--brass-base);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px var(--sepia-shadow);
+  align-self: center;
+}
+
+.dismiss-hint-button:hover {
+  background-color: var(--brass-base);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px var(--sepia-shadow);
+}
+
+.dismiss-hint-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px var(--sepia-shadow);
 }
 
 /* ============================================
@@ -503,6 +696,34 @@ p, span, div, button, input {
   
   .key-status {
     font-size: 1rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .send-button,
+  .clear-button {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .help-hints {
+    padding: 1rem;
+  }
+  
+  .hint-title {
+    font-size: 0.9rem;
+  }
+  
+  .hint-text {
+    font-size: 0.8rem;
+  }
+  
+  .status-message {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
   }
 }
 

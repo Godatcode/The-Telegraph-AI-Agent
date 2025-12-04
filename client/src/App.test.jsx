@@ -5,7 +5,7 @@ import App from './App';
 describe('App Component', () => {
   it('should render the app title', () => {
     render(<App />);
-    expect(screen.getByText('Telegraph AI Agent')).toBeInTheDocument();
+    expect(screen.getByText('TELEGRAPH AI AGENT')).toBeInTheDocument();
   });
 
   it('should render Telegraph Key component', () => {

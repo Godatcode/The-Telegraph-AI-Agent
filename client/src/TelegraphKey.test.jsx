@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import TelegraphKey from './TelegraphKey.jsx';
 
@@ -329,7 +330,7 @@ describe('TelegraphKey Component', () => {
 
       await waitFor(() => {
         expect(screen.queryByText('.')).not.toBeInTheDocument();
-        expect(screen.getByText('—')).toBeInTheDocument(); // Empty state indicator
+        expect(screen.getByText('TAP KEY TO BEGIN')).toBeInTheDocument(); // Empty state indicator
       });
     });
   });
@@ -400,6 +401,445 @@ describe('TelegraphKey Component', () => {
 
       // Should only register one input
       expect(mockOnDotDash).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('Status Message Generation', () => {
+    /**
+     * Unit tests for status message generation
+     * Requirements: 2.1, 2.3, 2.4, 2.5
+     */
+    
+    it('should show idle status when no transmission is in progress', () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // In idle state, the key should show READY
+      expect(screen.getByText('READY')).toBeInTheDocument();
+    });
+
+    it('should show sending status during transmission', async () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: /telegraph key/i });
+
+      // Input a sequence
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('SEND TRANSMISSION')).toBeInTheDocument();
+      });
+
+      const sendButton = screen.getByText('SEND TRANSMISSION');
+      fireEvent.click(sendButton);
+
+      // Send button should be disabled during transmission
+      expect(sendButton).toBeDisabled();
+    });
+
+    it('should return to idle status after successful transmission', async () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: /telegraph key/i });
+
+      // Input a sequence
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('SEND TRANSMISSION')).toBeInTheDocument();
+      });
+
+      const sendButton = screen.getByText('SEND TRANSMISSION');
+      fireEvent.click(sendButton);
+
+      // Wait for status to return to idle (500ms timeout in component)
+      await waitFor(() => {
+        expect(screen.getByText('READY')).toBeInTheDocument();
+      }, { timeout: 1000 });
+    });
+  });
+
+  describe('Tooltip Text Generation', () => {
+    /**
+     * Unit tests for tooltip text generation
+     * Requirements: 1.5
+     */
+    
+    it('should show empty buffer tooltip when sequence is empty', () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const sendButton = screen.getByRole('button', { name: /send transmission/i });
+      
+      expect(sendButton).toHaveAttribute('title', 'TAP KEY TO INPUT MORSE CODE');
+    });
+
+    it('should show transmission in progress tooltip when sending', async () => {
+      mockOnTransmissionComplete.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
+      
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: /telegraph key/i });
+
+      // Input a sequence
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('SEND TRANSMISSION')).toBeInTheDocument();
+      });
+
+      const sendButton = screen.getByRole('button', { name: /send transmission/i });
+      fireEvent.click(sendButton);
+
+      await waitFor(() => {
+        expect(sendButton).toHaveAttribute('title', 'TRANSMISSION IN PROGRESS');
+      });
+    });
+
+    it('should show system busy tooltip when component is disabled', () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+          disabled={true}
+        />
+      );
+
+      const sendButton = screen.getByRole('button', { name: /send transmission/i });
+      
+      expect(sendButton).toHaveAttribute('title', 'SYSTEM BUSY - WAIT FOR CURRENT OPERATION');
+    });
+
+    it('should show no tooltip when button is enabled with content', async () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: /telegraph key/i });
+
+      // Input a sequence
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('SEND TRANSMISSION')).toBeInTheDocument();
+      });
+
+      const sendButton = screen.getByRole('button', { name: /send transmission/i });
+      
+      expect(sendButton).toHaveAttribute('title', '');
+    });
+
+    it('should have aria-describedby for accessibility', () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const sendButton = screen.getByRole('button', { name: /send transmission/i });
+      
+      expect(sendButton).toHaveAttribute('aria-describedby', 'send-button-status');
+    });
+  });
+
+  describe('Character Count Calculation', () => {
+    /**
+     * Unit tests for character count calculation from morse sequences
+     * Requirements: 2.1
+     */
+    
+    it('should calculate character count for single character morse sequence', async () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: /telegraph key/i });
+
+      // Input 'E' (single dot)
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('.')).toBeInTheDocument();
+      });
+
+      // Sequence should show single dot
+      expect(screen.getByText('.')).toBeInTheDocument();
+    });
+
+    it('should calculate character count for multi-character morse sequence', async () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: /telegraph key/i });
+
+      // Input multiple symbols
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 300));
+      fireEvent.mouseUp(button);
+
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('.-.')).toBeInTheDocument();
+      });
+    });
+
+    it('should show empty state indicator when sequence is empty', () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // Empty state should show placeholder text
+      expect(screen.getByText('TAP KEY TO BEGIN')).toBeInTheDocument();
+    });
+  });
+
+  describe('Help Hints Component', () => {
+    /**
+     * Unit tests for help hints component
+     * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5
+     */
+    
+    beforeEach(() => {
+      // Clear localStorage before each test
+      localStorage.clear();
+    });
+
+    it('should show hints on first load when localStorage is empty', () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // Hints should be visible on first load
+      expect(screen.getByText(/TAP AND HOLD/i)).toBeInTheDocument();
+    });
+
+    it('should show appropriate hint for empty buffer state', () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // Should show hint about tap duration
+      expect(screen.getByText(/SHORT TAP.*DOT/i)).toBeInTheDocument();
+      expect(screen.getByText(/LONG HOLD.*DASH/i)).toBeInTheDocument();
+    });
+
+    it('should show hint about send button after first symbol', async () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: /telegraph key/i });
+
+      // Input first symbol
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await waitFor(() => {
+        expect(screen.getByText(/SEND TRANSMISSION/i)).toBeInTheDocument();
+      });
+
+      // Should show hint about send button
+      expect(screen.getByText(/CLICK.*SEND/i)).toBeInTheDocument();
+    });
+
+    it('should hide hints after first successful transmission', async () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: /telegraph key/i });
+
+      // Input a sequence
+      fireEvent.mouseDown(button);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      fireEvent.mouseUp(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('SEND TRANSMISSION')).toBeInTheDocument();
+      });
+
+      const sendButton = screen.getByText('SEND TRANSMISSION');
+      fireEvent.click(sendButton);
+
+      // Wait for transmission to complete
+      await waitFor(() => {
+        expect(screen.getByText('READY')).toBeInTheDocument();
+      }, { timeout: 1000 });
+
+      // Hints should be hidden after successful send
+      expect(screen.queryByText(/TAP AND HOLD/i)).not.toBeInTheDocument();
+    });
+
+    it('should persist hint dismissal in localStorage', async () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // Find and click dismiss button
+      const dismissButton = screen.getByRole('button', { name: /dismiss/i });
+      fireEvent.click(dismissButton);
+
+      // Hints should be hidden
+      await waitFor(() => {
+        expect(screen.queryByText(/TAP AND HOLD/i)).not.toBeInTheDocument();
+      });
+
+      // Check localStorage
+      const prefs = JSON.parse(localStorage.getItem('telegraphPreferences'));
+      expect(prefs.hideHints).toBe(true);
+    });
+
+    it('should not show hints when localStorage indicates they are hidden', () => {
+      // Set localStorage to hide hints
+      localStorage.setItem('telegraphPreferences', JSON.stringify({ hideHints: true }));
+
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // Hints should not be visible
+      expect(screen.queryByText(/TAP AND HOLD/i)).not.toBeInTheDocument();
+    });
+
+    it('should have dismiss button that hides hints', () => {
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // Hints should be visible initially
+      expect(screen.getByText(/TAP AND HOLD/i)).toBeInTheDocument();
+
+      // Find and click dismiss button
+      const dismissButton = screen.getByRole('button', { name: /dismiss/i });
+      fireEvent.click(dismissButton);
+
+      // Hints should be hidden
+      expect(screen.queryByText(/TAP AND HOLD/i)).not.toBeInTheDocument();
+    });
+
+    it('should show hints again on new component mount if not permanently dismissed', () => {
+      const { unmount } = render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // Hints should be visible
+      expect(screen.getByText(/TAP AND HOLD/i)).toBeInTheDocument();
+
+      unmount();
+
+      // Re-render without localStorage set
+      render(
+        <TelegraphKey 
+          onDotDash={mockOnDotDash}
+          onCharacterBreak={mockOnCharacterBreak}
+          onTransmissionComplete={mockOnTransmissionComplete}
+        />
+      );
+
+      // Hints should be visible again
+      expect(screen.getByText(/TAP AND HOLD/i)).toBeInTheDocument();
     });
   });
 });
