@@ -63,6 +63,8 @@ app.post('/api/send-telegram', async (req, res) => {
 
     // Decode the incoming Morse transmission
     const decodedText = morseToText(morse_sequence);
+    console.log('Received Morse:', morse_sequence);
+    console.log('Decoded text:', decodedText);
 
     // Check if decoding resulted in error markers
     if (decodedText.includes('�')) {
@@ -82,8 +84,11 @@ app.post('/api/send-telegram', async (req, res) => {
       replyText = 'OPERATOR UNAVAILABLE STOP TRY AGAIN STOP';
     }
 
+    console.log('Operator reply text:', replyText);
+
     // Encode AI response to Morse
     const replyMorse = textToMorse(replyText);
+    console.log('Operator reply Morse:', replyMorse);
     
     // Generate timing array for response playback
     const timingArray = morseToTiming(replyMorse);

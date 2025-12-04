@@ -15,16 +15,44 @@ A web-based application that resurrects the 1844 Morse code protocol as a modern
 - [Kiro Integration](#kiro-integration)
 - [Technology Stack](#technology-stack)
 
+## 🌟 Unique Value Proposition
+
+### Educational & Historical Preservation
+- **Learn Morse Code Interactively**: Hands-on learning with real-time feedback
+- **Preserve Telegraph History**: Experience authentic 1865 communication protocols
+- **Accessible to All**: No prior Morse code knowledge required
+- **Gamified Learning**: Progress from simple letters (E, T) to complex messages
+
+### Technical Innovation
+- **AI + Historical Tech**: First-of-its-kind fusion of 1865 telegraph with modern AI
+- **Authentic Audio**: Real 600Hz telegraph tones using Web Audio API
+- **Timing-Based Input**: Natural interaction - tap rhythm creates Morse code
+- **Property-Based Correctness**: 18 mathematical properties ensure accuracy
+
+### Extensibility & Scalability
+- **Educational Platform**: Can be extended for schools and museums
+- **API-First Design**: RESTful backend enables mobile apps, IoT devices
+- **MCP Integration**: Other AI agents can communicate via telegraph
+- **Multi-Language Support**: Morse code is universal - easy to internationalize
+
+### Market Differentiation
+- **No Competition**: No other AI telegraph simulators exist
+- **Niche Appeal**: Ham radio operators, history enthusiasts, educators
+- **Viral Potential**: Unique concept perfect for social media demos
+- **Museum Integration**: Ready for interactive exhibits
+
 ## Features
 
 - **Telegraph Key Interface**: Tap out Morse code using timing-based input detection (< 200ms = dot, ≥ 200ms = dash)
 - **Audio Feedback**: Authentic 600Hz telegraph tones using Web Audio API
 - **Real-Time Display**: See your dots and dashes appear instantly, with automatic character decoding
-- **AI Operator Persona**: Communicate with an AI that responds as a 19th-century Western Union telegraph operator
+- **AI Operator Persona**: Communicate with an AI that responds as a 19th-century Western Union telegraph operator (powered by OpenAI)
 - **Period-Accurate Styling**: Sepia tones, typewriter fonts, and paper textures for historical immersion
 - **Morse Audio Playback**: Hear AI responses transmitted back in authentic Morse code
 - **Kiro MCP Integration**: AI communication through the Telegraph Line tool
 - **Property-Based Testing**: Comprehensive correctness validation using fast-check (18 properties)
+- **Transmission History**: Log of all messages sent and received
+- **Error Handling**: Period-appropriate error messages ("TELEGRAPH LINE DOWN STOP")
 
 ## Quick Start
 
@@ -32,6 +60,7 @@ A web-based application that resurrects the 1844 Morse code protocol as a modern
 
 - Node.js 18+ and npm
 - Modern web browser with Web Audio API support
+- OpenAI API key (optional - falls back to echo mode without it)
 
 ### Installation
 
@@ -44,6 +73,19 @@ cd telegraph-ai-agent
 npm run install:all
 ```
 
+### Configuration
+
+**Optional: Enable Real AI Responses**
+
+Create a `.env` file in the `server/` directory:
+
+```bash
+# server/.env
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Without an API key, the operator will echo your messages. With an API key, you get intelligent contextual responses in character!
+
 ### Running the Application
 
 ```bash
@@ -55,6 +97,10 @@ npm run dev:client
 ```
 
 The application will be available at `http://localhost:5173` (client) with the API server running on `http://localhost:3001`.
+
+**Note**: The AI operator works in two modes:
+- **With OpenAI API key**: Intelligent, contextual responses in character
+- **Without API key**: Simple echo responses (still demonstrates all features)
 
 ## Morse Code Reference
 
@@ -321,9 +367,17 @@ Each property test runs 100+ iterations with randomly generated inputs.
 - **Property Tests**: `tests/properties/*.property.test.js`
 - **Integration Tests**: `tests/integration/*.test.js`
 
+## 🏆 Kiroween Hackathon - Resurrection Category
+
+This project demonstrates the **resurrection of 1865 telegraph technology** through modern AI, showcasing deep integration with Kiro's development platform. Built entirely using Kiro's features for the Kiroween Hackathon.
+
+### Why "Resurrection"?
+
+We've brought back the lost art of Morse code telegraph communication and merged it with cutting-edge AI technology. Users experience authentic 1865 telegraph operation while communicating with an AI that maintains historical accuracy and period-appropriate responses.
+
 ## Kiro Integration
 
-The Telegraph AI Agent is designed to work seamlessly with Kiro's AI development features.
+The Telegraph AI Agent showcases **extensive Kiro feature usage** across the entire development lifecycle:
 
 ### MCP Telegraph Line Tool
 
@@ -376,13 +430,79 @@ Automatically validates code for period-accurate terminology on file save:
 - Warns about anachronistic terms
 - Maintains historical immersion
 
+### Kiro Features Demonstrated
+
+This project showcases **10+ Kiro capabilities** used throughout development:
+
+#### 1. **Spec-Driven Development** 
+- Complete feature specification in `.kiro/specs/telegraph-ai-agent/`
+- EARS-compliant requirements with acceptance criteria
+- Detailed design document with 18 correctness properties
+- Task breakdown with property-based test requirements
+
+#### 2. **AI Steering Rules**
+- Custom operator persona in `.kiro/steering/operator-persona.md`
+- Automatically applied to all AI interactions
+- Enforces 1865 telegraph operator character
+- Maintains historical accuracy and brevity
+
+#### 3. **MCP (Model Context Protocol) Integration**
+- Custom MCP server: `server/mcp-telegraph-tool.js`
+- Telegraph Line tool for AI-to-Morse translation
+- Configuration in `.kiro/mcp/telegraph.json`
+- Enables AI agents to transmit via Morse code
+
+#### 4. **Development Hooks**
+- Automatic validation on file save
+- Code quality checks for period-accurate terminology
+- Prevents anachronistic terms in codebase
+- Configuration in `.kiro/hooks/validate-transmission.yaml`
+
+#### 5. **Property-Based Testing Strategy**
+- 18 correctness properties using fast-check
+- Validates Morse encoding/decoding round-trips
+- Tests timing thresholds and audio synchronization
+- Ensures ITU Morse code standard compliance
+
+#### 6. **AI-Assisted Development**
+- Used Kiro AI for component generation
+- Iterative refinement with AI feedback
+- Test generation and debugging assistance
+- Documentation writing support
+
+#### 7. **Integrated Testing Workflow**
+- Vitest integration with Kiro test runner
+- Real-time test feedback during development
+- Property tests + unit tests + integration tests
+- Coverage reporting
+
+#### 8. **Code Organization & Structure**
+- Monorepo structure (client/server/shared)
+- ES modules throughout
+- Isomorphic Morse engine
+- Clean separation of concerns
+
+#### 9. **Development Experience**
+- Hot module replacement (HMR) with Vite
+- Fast feedback loops
+- Integrated terminal for server/client
+- Seamless debugging
+
+#### 10. **Documentation-Driven Development**
+- Comprehensive README with examples
+- API documentation
+- Demo scripts for presentations
+- AI demo automation guide
+
 ### Using with Kiro
 
 1. **Open the project** in Kiro
-2. **MCP tool** automatically connects when server starts
-3. **Steering rules** apply to all AI interactions
-4. **Hooks** validate code on save
-5. **Chat with the operator** using natural language - responses come back in telegraph style
+2. **Specs** guide feature development with AI assistance
+3. **Steering rules** automatically apply operator persona
+4. **MCP tool** enables AI-to-telegraph communication
+5. **Hooks** validate code quality on save
+6. **Tests** run automatically with property-based validation
+7. **AI chat** helps debug and extend features
 
 ## Technology Stack
 
