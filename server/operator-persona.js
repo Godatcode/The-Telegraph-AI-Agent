@@ -110,32 +110,43 @@ export async function invokeOperatorAI(userMessage) {
     }
     return response;
   }
+  
+  console.log('Using Gemini API...');
 
   try {
     // Call Google Gemini API with operator persona
     // Using gemini-2.5-flash which is available in your API
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    
-    console.log('Using Gemini API...');
     console.log('Calling Gemini API...');
     
     const requestBody = {
       contents: [{
         parts: [{
-          text: `${userMessage}`
+          text: `You are a Western Union Telegraph Operator from 1865. Follow these rules strictly:
+1. Use ONLY UPPERCASE letters
+2. Replace periods with "STOP"
+3. Maximum 20 words per response
+4. Be concise - charge by the word
+5. If users mention modern concepts (internet, email, computer, phone), express confusion in character
+6. Use 1860s language and professional telegraph operator tone
+7. Use abbreviations: REC'D, MSG, XMIT
+8. Acknowledge receipt: "RECEIVED STOP [response] STOP"
+
+Examples:
+- User: "Hello" → "RECEIVED STOP HELLO STOP OPERATOR STANDING BY STOP"
+- User: "What time is it?" → "RECEIVED STOP TIME IS [current time] STOP"
+- User: "Email me" → "WHAT IN TARNATION IS EMAIL STOP SEND TELEGRAM STOP"
+
+User message: ${userMessage}
+
+Respond as the telegraph operator:`
         }]
       }],
       generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 500,
+        temperature: 0.8,
+        maxOutputTokens: 200,
         topP: 0.95,
-        topK: 40,
-        responseMimeType: 'text/plain'
-      },
-      systemInstruction: {
-        parts: [{
-          text: 'You are a 1865 Western Union telegraph operator. Respond in UPPERCASE only. Replace periods with STOP. Maximum 20 words. Be concise. Use 1860s language. Format: "RECEIVED STOP [response] STOP". Know common codes: SOS = distress/emergency, CQ = general call, 73 = best regards. Respond contextually to user messages.'
-        }]
+        topK: 40
       },
       safetySettings: [
         {
@@ -173,55 +184,14 @@ export async function invokeOperatorAI(userMessage) {
 
     const data = await response.json();
     console.log('Gemini API response received');
-    console.log('Response finish reason:', data.candidates?.[0]?.finishReason || 'unknown');
+    console.log('Response data:', JSON.stringify(data, null, 2));
     
     // Parse the response - handle different response formats
     let aiResponse = '';
-    const candidate = data.candidates && data.candidates[0];
-    
-    if (candidate) {
-      // Check for finish reason
-      const finishReason = candidate.finishReason;
-      
-      // Try multiple ways to extract text content
-      // Method 1: Standard parts array
-      if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
-        for (const part of candidate.content.parts) {
-          if (part.text && part.text.trim()) {
-            aiResponse = part.text.trim();
-            break;
-          }
-        }
-      }
-      
-      // Method 2: Check if content has text directly (some API versions)
-      if ((!aiResponse || aiResponse === '') && candidate.content && candidate.content.text) {
-        aiResponse = candidate.content.text.trim();
-      }
-      
-      // Method 3: Check candidate.text directly (fallback)
-      if ((!aiResponse || aiResponse === '') && candidate.text) {
-        aiResponse = candidate.text.trim();
-      }
-      
-      // If no text was extracted, handle gracefully
-      if (!aiResponse || aiResponse === '') {
-        if (finishReason === 'MAX_TOKENS') {
-          console.warn('No content extracted from MAX_TOKENS response, using fallback');
-          // Use a fallback response when hitting token limit
-          aiResponse = `RECEIVED STOP ${userMessage.toUpperCase()} STOP OPERATOR STANDING BY STOP`;
-        } else {
-          // Log the full candidate structure for debugging
-          console.error('Full candidate structure:', JSON.stringify(candidate, null, 2));
-          throw new Error(`Unexpected response format from Gemini API. Finish reason: ${finishReason || 'unknown'}`);
-        }
-      } else if (finishReason === 'MAX_TOKENS') {
-        // We got partial content, that's fine
-        console.log('Extracted partial content from MAX_TOKENS response');
-      }
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+      aiResponse = data.candidates[0].content.parts[0].text.trim();
     } else {
-      console.error('No candidates found in response');
-      throw new Error('Unexpected response format from Gemini API: No candidates found');
+      throw new Error('Unexpected response format from Gemini API');
     }
     
     // Apply operator persona transformations as safety net
@@ -233,7 +203,6 @@ export async function invokeOperatorAI(userMessage) {
       aiResponse = words.slice(0, 20).join(' ') + ' STOP';
     }
     
-    console.log('AI response:', aiResponse);
     return aiResponse;
     
   } catch (error) {
