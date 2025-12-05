@@ -46,7 +46,7 @@ A web-based application that resurrects the 1844 Morse code protocol as a modern
 - **Telegraph Key Interface**: Tap out Morse code using timing-based input detection (< 200ms = dot, ≥ 200ms = dash)
 - **Audio Feedback**: Authentic 600Hz telegraph tones using Web Audio API
 - **Real-Time Display**: See your dots and dashes appear instantly, with automatic character decoding
-- **AI Operator Persona**: Communicate with an AI that responds as a 19th-century Western Union telegraph operator (powered by OpenAI)
+- **AI Operator Persona**: Communicate with an AI that responds as a 19th-century Western Union telegraph operator (powered by Google Gemini)
 - **Period-Accurate Styling**: Sepia tones, typewriter fonts, and paper textures for historical immersion
 - **Morse Audio Playback**: Hear AI responses transmitted back in authentic Morse code
 - **Kiro MCP Integration**: AI communication through the Telegraph Line tool
@@ -60,7 +60,7 @@ A web-based application that resurrects the 1844 Morse code protocol as a modern
 
 - Node.js 18+ and npm
 - Modern web browser with Web Audio API support
-- OpenAI API key (optional - falls back to echo mode without it)
+- Google Gemini API key (optional but recommended - FREE at https://makersuite.google.com/app/apikey)
 
 ### Installation
 
@@ -81,8 +81,10 @@ Create a `.env` file in the `server/` directory:
 
 ```bash
 # server/.env
-OPENAI_API_KEY=your_openai_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
+
+Get your FREE Gemini API key at: https://makersuite.google.com/app/apikey
 
 Without an API key, the operator will echo your messages. With an API key, you get intelligent contextual responses in character!
 
@@ -99,7 +101,7 @@ npm run dev:client
 The application will be available at `http://localhost:5173` (client) with the API server running on `http://localhost:3001`.
 
 **Note**: The AI operator works in two modes:
-- **With OpenAI API key**: Intelligent, contextual responses in character
+- **With Gemini API key**: Intelligent, contextual responses in character (FREE!)
 - **Without API key**: Simple echo responses (still demonstrates all features)
 
 ## Morse Code Reference
