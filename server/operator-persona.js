@@ -115,10 +115,10 @@ export async function invokeOperatorAI(userMessage) {
 
   try {
     // Call Google Gemini API with operator persona
-    // Using gemini-2.5-flash which is available in your API
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    // Using gemini-2.0-flash-001 - stable version without thinking tokens overhead
+    const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-001:generateContent?key=${apiKey}`;
     console.log('Calling Gemini API...');
-    
+
     const requestBody = {
       contents: [{
         parts: [{
@@ -143,10 +143,10 @@ Respond as the telegraph operator:`
         }]
       }],
       generationConfig: {
-        temperature: 0.8,
-        maxOutputTokens: 200,
-        topP: 0.95,
-        topK: 40
+        temperature: 0.7,
+        maxOutputTokens: 100,
+        topP: 0.9,
+        topK: 20
       },
       safetySettings: [
         {
@@ -188,10 +188,31 @@ Respond as the telegraph operator:`
     
     // Parse the response - handle different response formats
     let aiResponse = '';
-    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
-      aiResponse = data.candidates[0].content.parts[0].text.trim();
+    if (data.candidates && data.candidates[0]) {
+      const candidate = data.candidates[0];
+      
+      // Check if content.parts exists
+      if (candidate.content && candidate.content.parts && candidate.content.parts[0]) {
+        aiResponse = candidate.content.parts[0].text.trim();
+      } 
+      // Check if text is directly in content
+      else if (candidate.content && candidate.content.text) {
+        aiResponse = candidate.content.text.trim();
+      }
+      // Check if output exists (alternative format)
+      else if (candidate.output) {
+        aiResponse = candidate.output.trim();
+      }
+      // Check if text is directly in candidate
+      else if (candidate.text) {
+        aiResponse = candidate.text.trim();
+      }
+      else {
+        console.error('Could not find text in response structure');
+        throw new Error('Unexpected response format from Gemini API');
+      }
     } else {
-      throw new Error('Unexpected response format from Gemini API');
+      throw new Error('No candidates in Gemini API response');
     }
     
     // Apply operator persona transformations as safety net
